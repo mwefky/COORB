@@ -23,6 +23,7 @@
 		8D89AA4C4478B28BF046E35D /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E829EE617AC53275A0CF00AE /* AppConfig.swift */; };
 		8DCEA19FFD0F73ADE22B853F /* MockAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A39DA4874214EE7F7B0D0A9 /* MockAPIClient.swift */; };
 		91DFFC41B932D3D0692DAAF9 /* FileCountriesCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D729802D500218DD4369B9D2 /* FileCountriesCacheTests.swift */; };
+		9330E86F22B64805F0F2210C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E2C7DE1870BEEF02E82818 /* AppCoordinator.swift */; };
 		9AFF322BCF1D9F9734B41A3A /* MockLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF89EE8F35AC3F058356F6F1 /* MockLocationProvider.swift */; };
 		9B9E2D3F0E6A1EA9CC7E0AAA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9544934E9C59EEE0A0A3116A /* Assets.xcassets */; };
 		9D6419A3D131FE63050C8C96 /* LocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFFE64025CE74D568B93A5AB /* LocalStoreTests.swift */; };
@@ -67,6 +68,7 @@
 		93C08DE12261E253448FFADF /* FakeCLLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeCLLocationManager.swift; sourceTree = "<group>"; };
 		9544934E9C59EEE0A0A3116A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9BDD026C6F2042F2DFA21DF8 /* DefaultCountriesRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCountriesRepositoryTests.swift; sourceTree = "<group>"; };
+		A9E2C7DE1870BEEF02E82818 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		C648D3163F28C5045EEEC65C /* LocationProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderTests.swift; sourceTree = "<group>"; };
 		CC4C952E0671EF3C17A75586 /* COORBAssessmentTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = COORBAssessmentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF89EE8F35AC3F058356F6F1 /* MockLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocationProvider.swift; sourceTree = "<group>"; };
@@ -157,11 +159,20 @@
 			path = Location;
 			sourceTree = "<group>";
 		};
+		865A08BE447142A53E965A94 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				A9E2C7DE1870BEEF02E82818 /* AppCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
 		8930EA48690F3CF77F98749C /* COORBAssessment */ = {
 			isa = PBXGroup;
 			children = (
 				E829EE617AC53275A0CF00AE /* AppConfig.swift */,
 				E8602C7215D79A34C45EF235 /* COORBAssessmentApp.swift */,
+				865A08BE447142A53E965A94 /* Coordinator */,
 				7492B8802795A81ACCABD5AA /* Location */,
 				1889EEEABEA5080D2A7C75EF /* Models */,
 				AD6F3F2340025324A6030E22 /* Network */,
@@ -363,6 +374,7 @@
 				E5029976CE6F8816A880F18F /* APIEndpoint.swift in Sources */,
 				22163BC79AA96E1A61F37EAC /* APIError.swift in Sources */,
 				8D89AA4C4478B28BF046E35D /* AppConfig.swift in Sources */,
+				9330E86F22B64805F0F2210C /* AppCoordinator.swift in Sources */,
 				DEC335C43EA553E4D12FE984 /* COORBAssessmentApp.swift in Sources */,
 				16B846797884B610AB154B33 /* CountriesCache.swift in Sources */,
 				A8F4770054ECE8B4447BAC11 /* CountriesRepository.swift in Sources */,
