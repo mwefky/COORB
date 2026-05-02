@@ -65,7 +65,7 @@ This project follows the MVVM architecture with protocols and dependency injecti
 - **DefaultCountryResolver**: Encapsulates logic for determining the default country.
 
 ## Future Enhancements
-- **Integrate Facebook SnapshotKit for UI Tests**: Use SnapshotKit to take screenshots during UI tests for visual regression testing.
+- ~~**Integrate Facebook SnapshotKit for UI Tests**: Use SnapshotKit to take screenshots during UI tests for visual regression testing.~~
 - **Support for Advanced UI Testing**: Expand UI tests to cover edge cases, such as large country lists or poor network conditions.
 - **Localization**: Add support for multiple languages to make the app more accessible.
 - **Enhanced Offline Support**: Include background sync to refresh data while maintaining user changes.

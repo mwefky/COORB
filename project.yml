@@ -13,6 +13,11 @@ settings:
     CURRENT_PROJECT_VERSION: 1
     MARKETING_VERSION: "1.0"
 
+packages:
+  SnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    from: 1.15.0
+
 targets:
   COORBAssessment:
     type: application
@@ -37,6 +42,7 @@ targets:
       - path: COORBAssessmentTests
     dependencies:
       - target: COORBAssessment
+      - package: SnapshotTesting
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.minawefky.COORBAssessmentTests
