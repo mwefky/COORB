@@ -12,6 +12,7 @@ final class FileCountriesCacheTests: XCTestCase {
 
     private var tempDirectory: URL!
     private var sut: FileCountriesCache!
+    private let fixedDate = Date(timeIntervalSince1970: 1_700_000_000)
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -19,7 +20,11 @@ final class FileCountriesCacheTests: XCTestCase {
             .appendingPathComponent("CountriesCacheTests-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: tempDirectory,
                                                 withIntermediateDirectories: true)
-        sut = FileCountriesCache(directory: tempDirectory, fileName: "countries.json")
+        sut = FileCountriesCache(
+            directory: tempDirectory,
+            fileName: "countries.json",
+            now: { self.fixedDate }
+        )
     }
 
     override func tearDownWithError() throws {
@@ -33,7 +38,7 @@ final class FileCountriesCacheTests: XCTestCase {
         XCTAssertNil(try sut.load())
     }
 
-    func test_save_thenLoad_returnsSameCountries() throws {
+    func test_save_thenLoad_returnsCountriesWithSavedAtTimestamp() throws {
         let countries = [
             makeCountry(code: "EG"),
             makeCountry(code: "FR", name: "France", capital: "Paris")
@@ -42,7 +47,8 @@ final class FileCountriesCacheTests: XCTestCase {
         try sut.save(countries)
         let loaded = try sut.load()
 
-        XCTAssertEqual(loaded, countries)
+        XCTAssertEqual(loaded?.countries, countries)
+        XCTAssertEqual(loaded?.savedAt, fixedDate)
     }
 
     func test_save_overwritesPreviousData() throws {
@@ -50,8 +56,8 @@ final class FileCountriesCacheTests: XCTestCase {
         try sut.save([makeCountry(code: "FR", name: "France", capital: "Paris")])
 
         let loaded = try sut.load()
-        XCTAssertEqual(loaded?.count, 1)
-        XCTAssertEqual(loaded?.first?.code, "FR")
+        XCTAssertEqual(loaded?.countries.count, 1)
+        XCTAssertEqual(loaded?.countries.first?.code, "FR")
     }
 
     func test_load_throwsDecodingError_whenFileIsCorrupt() throws {
