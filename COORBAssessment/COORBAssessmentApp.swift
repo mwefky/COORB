@@ -10,7 +10,14 @@ import SwiftUI
 @main
 struct COORBAssessmentApp: App {
 
-    private let coordinator = AppCoordinator()
+    private let coordinator: AppCoordinator
+
+    init() {
+        if ProcessInfo.processInfo.arguments.contains("--reset") {
+            UserDefaults.standard.removeObject(forKey: "addedCountries")
+        }
+        self.coordinator = AppCoordinator()
+    }
 
     var body: some Scene {
         WindowGroup {

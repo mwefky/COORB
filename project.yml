@@ -41,13 +41,27 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.minawefky.COORBAssessmentTests
 
+  COORBAssessmentUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: COORBAssessmentUITests
+    dependencies:
+      - target: COORBAssessment
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.minawefky.COORBAssessmentUITests
+        TEST_TARGET_NAME: COORBAssessment
+
 schemes:
   COORBAssessment:
     build:
       targets:
         COORBAssessment: all
         COORBAssessmentTests: [test]
+        COORBAssessmentUITests: [test]
     test:
       targets:
         - COORBAssessmentTests
+        - COORBAssessmentUITests
       gatherCoverageData: true
