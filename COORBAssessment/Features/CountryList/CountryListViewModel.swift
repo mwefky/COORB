@@ -16,6 +16,7 @@ class CountryListViewModel: ObservableObject {
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorMessage: String?
     @Published private(set) var permissionDenied: Bool = false
+    @Published var limitReachedAlert: Bool = false
 
     private let repository: CountriesRepository
     private let store: LocalStore
@@ -75,8 +76,11 @@ class CountryListViewModel: ObservableObject {
     }
 
     func addCountry(_ country: Country) {
-        store.add(country)
+        let result = store.add(country)
         addedCountries = store.addedCountries
+        if result == .limitReached {
+            limitReachedAlert = true
+        }
     }
 
     func removeCountry(_ country: Country) {

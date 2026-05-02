@@ -39,22 +39,25 @@ final class LocalStoreTests: XCTestCase {
         XCTAssertEqual(sut.addedCountries.first?.code, "EG")
     }
 
-    func test_add_doesNotAddDuplicates() {
-        sut.add(makeCountry(code: "EG"))
-        sut.add(makeCountry(code: "EG"))
+    func test_add_doesNotAddDuplicates_andReturnsDuplicate() {
+        XCTAssertEqual(sut.add(makeCountry(code: "EG")), .added)
+        XCTAssertEqual(sut.add(makeCountry(code: "EG")), .duplicate)
 
         XCTAssertEqual(sut.addedCountries.count, 1)
     }
 
-    func test_add_keepsLastFive_whenLimitReached() {
+    func test_add_returnsLimitReached_andDoesNotEvict_whenAtLimit() {
         for code in ["EG", "FR", "DE", "ES", "IT"] {
             sut.add(makeCountry(code: code))
         }
-        sut.add(makeCountry(code: "JP"))
 
+        let result = sut.add(makeCountry(code: "JP"))
+
+        XCTAssertEqual(result, .limitReached)
         XCTAssertEqual(sut.addedCountries.count, 5)
-        XCTAssertEqual(sut.addedCountries.first?.code, "FR")
-        XCTAssertEqual(sut.addedCountries.last?.code, "JP")
+        XCTAssertEqual(sut.addedCountries.first?.code, "EG")
+        XCTAssertEqual(sut.addedCountries.last?.code, "IT")
+        XCTAssertFalse(sut.addedCountries.contains(where: { $0.code == "JP" }))
     }
 
     func test_remove_removesByCode() {
