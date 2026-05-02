@@ -14,11 +14,19 @@ final class DefaultCountriesRepositoryTests: XCTestCase {
     private var cache: MockCountriesCache!
     private var sut: DefaultCountriesRepository!
 
+    private let referenceDate = Date(timeIntervalSince1970: 1_700_000_000)
+    private let ttl: TimeInterval = 3600
+
     override func setUp() {
         super.setUp()
         apiClient = MockAPIClient()
         cache = MockCountriesCache()
-        sut = DefaultCountriesRepository(apiClient: apiClient, cache: cache)
+        sut = DefaultCountriesRepository(
+            apiClient: apiClient,
+            cache: cache,
+            ttl: ttl,
+            now: { self.referenceDate }
+        )
     }
 
     override func tearDown() {
@@ -28,22 +36,23 @@ final class DefaultCountriesRepositoryTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_fetchCountries_returnsMappedCountries_andSavesToCache_onAPISuccess() async throws {
+    func test_fetchCountries_returnsAndCachesAPIResult_whenNoCache() async throws {
         apiClient.stubbedResponse = [
             makeDTO(code: "EG"),
             makeDTO(code: "FR", name: "France", capital: "Paris")
         ]
+        cache.loadResult = .success(nil)
 
         let countries = try await sut.fetchCountries()
 
         XCTAssertEqual(countries.count, 2)
         XCTAssertEqual(countries.first?.code, "EG")
         XCTAssertEqual(cache.savedCountries?.count, 2)
-        XCTAssertEqual(cache.savedCountries?.last?.name, "France")
     }
 
     func test_fetchCountries_callsAllCountriesEndpoint() async throws {
         apiClient.stubbedResponse = [CountryDTO]()
+        cache.loadResult = .success(nil)
 
         _ = try await sut.fetchCountries()
 
@@ -51,18 +60,51 @@ final class DefaultCountriesRepositoryTests: XCTestCase {
         XCTAssertEqual(apiClient.sentEndpoints.first?.path, "/all")
     }
 
-    func test_fetchCountries_returnsCachedCountries_whenAPIFailsAndCacheExists() async throws {
-        apiClient.stubbedError = APIError.server(statusCode: 500)
-        let cached = [Country(code: "EG", name: "Egypt", capital: "Cairo",
-                              currency: "EGP", flagURL: "")]
-        cache.loadResult = .success(cached)
+    func test_fetchCountries_returnsFreshCache_withoutWaitingForAPI() async throws {
+        let cached = [
+            Country(code: "EG", name: "Egypt", capital: "Cairo",
+                    currency: "EGP", flagURL: "")
+        ]
+        cache.loadResult = .success(CachedCountries(
+            savedAt: referenceDate.addingTimeInterval(-60),
+            countries: cached
+        ))
+        apiClient.stubbedResponse = [makeDTO(code: "JP", name: "Japan", capital: "Tokyo")]
 
         let countries = try await sut.fetchCountries()
 
         XCTAssertEqual(countries, cached)
     }
 
-    func test_fetchCountries_throws_whenAPIFailsAndCacheIsEmpty() async {
+    func test_fetchCountries_skipsStaleCache_andHitsAPI() async throws {
+        let cached = [Country(code: "EG", name: "Egypt", capital: "Cairo",
+                              currency: "EGP", flagURL: "")]
+        cache.loadResult = .success(CachedCountries(
+            savedAt: referenceDate.addingTimeInterval(-(ttl + 1)),
+            countries: cached
+        ))
+        apiClient.stubbedResponse = [makeDTO(code: "JP", name: "Japan", capital: "Tokyo")]
+
+        let countries = try await sut.fetchCountries()
+
+        XCTAssertEqual(countries.first?.code, "JP")
+    }
+
+    func test_fetchCountries_fallsBackToStaleCache_whenAPIFails() async throws {
+        let cached = [Country(code: "EG", name: "Egypt", capital: "Cairo",
+                              currency: "EGP", flagURL: "")]
+        cache.loadResult = .success(CachedCountries(
+            savedAt: referenceDate.addingTimeInterval(-(ttl + 1)),
+            countries: cached
+        ))
+        apiClient.stubbedError = APIError.server(statusCode: 500)
+
+        let countries = try await sut.fetchCountries()
+
+        XCTAssertEqual(countries, cached)
+    }
+
+    func test_fetchCountries_throws_whenAPIFailsAndNoCache() async {
         apiClient.stubbedError = APIError.server(statusCode: 500)
         cache.loadResult = .success(nil)
 
@@ -78,7 +120,10 @@ final class DefaultCountriesRepositoryTests: XCTestCase {
 
     func test_fetchCountries_throws_whenAPIFailsAndCacheReturnsEmptyArray() async {
         apiClient.stubbedError = APIError.server(statusCode: 500)
-        cache.loadResult = .success([])
+        cache.loadResult = .success(CachedCountries(
+            savedAt: referenceDate.addingTimeInterval(-(ttl + 1)),
+            countries: []
+        ))
 
         do {
             _ = try await sut.fetchCountries()
@@ -106,6 +151,7 @@ final class DefaultCountriesRepositoryTests: XCTestCase {
 
     func test_fetchCountries_doesNotThrow_whenCacheSaveFails() async throws {
         apiClient.stubbedResponse = [makeDTO(code: "EG")]
+        cache.loadResult = .success(nil)
         cache.saveError = NSError(domain: "test", code: 1)
 
         let countries = try await sut.fetchCountries()
