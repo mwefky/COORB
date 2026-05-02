@@ -40,8 +40,9 @@ class CountryListViewModel: ObservableObject {
     }
 
     var searchSuggestions: [Country] {
-        guard !searchQuery.isEmpty else { return [] }
-        let query = searchQuery.lowercased()
+        let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return [] }
+        let query = trimmed.lowercased()
         return availableCountries
             .filter { $0.name.lowercased().contains(query) }
             .prefix(20)
