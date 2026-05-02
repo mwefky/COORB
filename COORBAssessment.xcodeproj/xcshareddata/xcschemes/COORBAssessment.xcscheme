@@ -35,6 +35,20 @@
                ReferencedContainer = "container:COORBAssessment.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1473D6C57044F08C3D94F6FB"
+               BuildableName = "COORBAssessmentUITests.xctest"
+               BlueprintName = "COORBAssessmentUITests"
+               ReferencedContainer = "container:COORBAssessment.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -62,6 +76,17 @@
                BlueprintIdentifier = "6E93EE85B54100BA8E3CB236"
                BuildableName = "COORBAssessmentTests.xctest"
                BlueprintName = "COORBAssessmentTests"
+               ReferencedContainer = "container:COORBAssessment.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1473D6C57044F08C3D94F6FB"
+               BuildableName = "COORBAssessmentUITests.xctest"
+               BlueprintName = "COORBAssessmentUITests"
                ReferencedContainer = "container:COORBAssessment.xcodeproj">
             </BuildableReference>
          </TestableReference>

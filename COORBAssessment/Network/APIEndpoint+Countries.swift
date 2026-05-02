@@ -8,5 +8,10 @@
 import Foundation
 
 extension APIEndpoint {
-    static let allCountries = APIEndpoint(path: "/all")
+    static let allCountries = APIEndpoint(
+        path: "/all",
+        queryItems: [
+            URLQueryItem(name: "fields", value: "name,alpha2Code,capital,currencies,flags")
+        ]
+    )
 }

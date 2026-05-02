@@ -25,6 +25,7 @@
 		4DDF7ACF7B4DDCBA2955AC9A /* CountryDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AA0C0078C33A5DAFF4E3FE /* CountryDetailViewModelTests.swift */; };
 		62BEA7A035C2E9D27DD03AAF /* FakeCLLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C08DE12261E253448FFADF /* FakeCLLocationManager.swift */; };
 		6A29283D62514160097792F6 /* APIEndpoint+Countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B3D6BDFE9572FE303FDC95 /* APIEndpoint+Countries.swift */; };
+		762211F570628746F3CABB11 /* CountryListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A013F5B1E7A1B1F5FCE7AD /* CountryListUITests.swift */; };
 		856F51FA14160F55A627513C /* MockCountriesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2BEA562D7E6EBC3BDC34EB /* MockCountriesCache.swift */; };
 		857F9074B2C4B087CB6F2726 /* URLProtocolStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741453F1B9F823B1F4ECFF07 /* URLProtocolStub.swift */; };
 		8D89AA4C4478B28BF046E35D /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E829EE617AC53275A0CF00AE /* AppConfig.swift */; };
@@ -58,6 +59,13 @@
 			remoteGlobalIDString = 9247C60AD908957AB87D17E4;
 			remoteInfo = COORBAssessment;
 		};
+		06CC0B8C51484C525F89C212 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B90D3E89098171143259C54 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9247C60AD908957AB87D17E4;
+			remoteInfo = COORBAssessment;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +73,7 @@
 		1858DC63053D8899895F128E /* CountryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDetailViewModel.swift; sourceTree = "<group>"; };
 		19E722B0A8C28ED8018E3EF2 /* CountryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDTO.swift; sourceTree = "<group>"; };
 		2029EE2FDE881F521F7201B1 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		22AA95C3A446CAC6BB2C4D7C /* COORBAssessmentUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = COORBAssessmentUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		283972D0A76025453D694F4D /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 		2B2BEA562D7E6EBC3BDC34EB /* MockCountriesCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCountriesCache.swift; sourceTree = "<group>"; };
 		3B1326F81EC28BC1049ABAF6 /* CountriesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesRepository.swift; sourceTree = "<group>"; };
@@ -93,6 +102,7 @@
 		D729802D500218DD4369B9D2 /* FileCountriesCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCountriesCacheTests.swift; sourceTree = "<group>"; };
 		E03334C36AF633A0776389E3 /* CountryMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMapper.swift; sourceTree = "<group>"; };
 		E0885A291539BF3FAD6F1A1E /* MockCountriesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCountriesRepository.swift; sourceTree = "<group>"; };
+		E0A013F5B1E7A1B1F5FCE7AD /* CountryListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryListUITests.swift; sourceTree = "<group>"; };
 		E5AFA161F43408EB899BB478 /* CountryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryRow.swift; sourceTree = "<group>"; };
 		E7D022A0FD73CDFEC8531EAD /* CountryMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMapperTests.swift; sourceTree = "<group>"; };
 		E829EE617AC53275A0CF00AE /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
@@ -190,6 +200,7 @@
 			children = (
 				8930EA48690F3CF77F98749C /* COORBAssessment */,
 				C918BBC98E02E8336878D79A /* COORBAssessmentTests */,
+				A10370B574AC4B8CE2F0E69C /* COORBAssessmentUITests */,
 				CA7502270A9A8FBD6D650CC4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -256,6 +267,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		A10370B574AC4B8CE2F0E69C /* COORBAssessmentUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E0A013F5B1E7A1B1F5FCE7AD /* CountryListUITests.swift */,
+			);
+			path = COORBAssessmentUITests;
+			sourceTree = "<group>";
+		};
 		AD6F3F2340025324A6030E22 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -287,6 +306,7 @@
 			children = (
 				EC2A060556230A0AFE8D2FCB /* COORBAssessment.app */,
 				CC4C952E0671EF3C17A75586 /* COORBAssessmentTests.xctest */,
+				22AA95C3A446CAC6BB2C4D7C /* COORBAssessmentUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -351,6 +371,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1473D6C57044F08C3D94F6FB /* COORBAssessmentUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D573BC50AC813929D0AF1383 /* Build configuration list for PBXNativeTarget "COORBAssessmentUITests" */;
+			buildPhases = (
+				63CFA68C3234BE21388F76EB /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				63391A5AFD344DC1404B8202 /* PBXTargetDependency */,
+			);
+			name = COORBAssessmentUITests;
+			packageProductDependencies = (
+			);
+			productName = COORBAssessmentUITests;
+			productReference = 22AA95C3A446CAC6BB2C4D7C /* COORBAssessmentUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		6E93EE85B54100BA8E3CB236 /* COORBAssessmentTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A8E98471804093858ADC7CAC /* Build configuration list for PBXNativeTarget "COORBAssessmentTests" */;
@@ -396,6 +434,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					1473D6C57044F08C3D94F6FB = {
+						TestTargetID = 9247C60AD908957AB87D17E4;
+					};
 				};
 			};
 			buildConfigurationList = EACF5B118C609758F6B8FC8B /* Build configuration list for PBXProject "COORBAssessment" */;
@@ -414,6 +455,7 @@
 			targets = (
 				9247C60AD908957AB87D17E4 /* COORBAssessment */,
 				6E93EE85B54100BA8E3CB236 /* COORBAssessmentTests */,
+				1473D6C57044F08C3D94F6FB /* COORBAssessmentUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -454,6 +496,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		63CFA68C3234BE21388F76EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				762211F570628746F3CABB11 /* CountryListUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E9EB2D4E35E1F5CB91C417B3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -487,6 +537,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		63391A5AFD344DC1404B8202 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9247C60AD908957AB87D17E4 /* COORBAssessment */;
+			targetProxy = 06CC0B8C51484C525F89C212 /* PBXContainerItemProxy */;
+		};
 		F92B4E642BAB6089896ACCCB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9247C60AD908957AB87D17E4 /* COORBAssessment */;
@@ -657,6 +712,22 @@
 			};
 			name = Release;
 		};
+		A77F81ADB7567A980E4D7DB3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.minawefky.COORBAssessmentUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = COORBAssessment;
+			};
+			name = Release;
+		};
 		C9C80D1DD1044BF40C64B018 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -694,6 +765,22 @@
 			};
 			name = Debug;
 		};
+		E06CD89D3FDE311B746D7906 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.minawefky.COORBAssessmentUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = COORBAssessment;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -711,6 +798,15 @@
 			buildConfigurations = (
 				CA5217C125776E8D16B4A76A /* Debug */,
 				8D8F16DF949F6A78BC1D5E1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D573BC50AC813929D0AF1383 /* Build configuration list for PBXNativeTarget "COORBAssessmentUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E06CD89D3FDE311B746D7906 /* Debug */,
+				A77F81ADB7567A980E4D7DB3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
