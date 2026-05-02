@@ -11,6 +11,12 @@ class LocalStore {
 
     static let maxCountries = 5
 
+    enum AddResult: Equatable {
+        case added
+        case duplicate
+        case limitReached
+    }
+
     private let userDefaults: UserDefaults
     private let storageKey: String
     private(set) var addedCountries: [Country]
@@ -22,15 +28,18 @@ class LocalStore {
         self.addedCountries = LocalStore.load(from: userDefaults, key: storageKey)
     }
 
-    func add(_ country: Country) {
-        guard !addedCountries.contains(where: { $0.code == country.code }) else { return }
-
+    @discardableResult
+    func add(_ country: Country) -> AddResult {
+        if addedCountries.contains(where: { $0.code == country.code }) {
+            return .duplicate
+        }
         if addedCountries.count >= LocalStore.maxCountries {
-            addedCountries.removeFirst()
+            return .limitReached
         }
 
         addedCountries.append(country)
         persist()
+        return .added
     }
 
     func remove(_ country: Country) {

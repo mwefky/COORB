@@ -90,6 +90,19 @@ final class CountryListViewModelTests: XCTestCase {
         XCTAssertEqual(sut.addedCountries.first?.code, "EG")
     }
 
+    func test_addCountry_setsLimitAlert_andDoesNotEvict_whenAtLimit() {
+        for code in ["EG", "FR", "DE", "ES", "IT"] {
+            sut.addCountry(makeCountry(code: code))
+        }
+
+        sut.addCountry(makeCountry(code: "JP"))
+
+        XCTAssertTrue(sut.limitReachedAlert)
+        XCTAssertEqual(sut.addedCountries.count, 5)
+        XCTAssertEqual(sut.addedCountries.first?.code, "EG")
+        XCTAssertFalse(sut.addedCountries.contains(where: { $0.code == "JP" }))
+    }
+
     func test_removeCountry_removesFromAddedCountries() {
         sut.addCountry(makeCountry(code: "EG"))
         sut.addCountry(makeCountry(code: "FR", name: "France"))
