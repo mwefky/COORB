@@ -9,11 +9,12 @@ import SwiftUI
 
 @main
 struct COORBAssessmentApp: App {
+
+    private let coordinator = AppCoordinator()
+
     var body: some Scene {
         WindowGroup {
-            // Root view will be wired in once the country list feature lands.
-            Text("COORB")
-                .font(.title)
+            coordinator.start()
         }
     }
 }
