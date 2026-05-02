@@ -132,6 +132,25 @@ final class CountryListViewModelTests: XCTestCase {
         XCTAssertTrue(sut.searchSuggestions.isEmpty)
     }
 
+    func test_searchSuggestions_emptyForWhitespaceOnlyQuery() async {
+        repository.stubbedResponse = [makeCountry(code: "EG", name: "Egypt")]
+        await sut.loadCountries()
+
+        sut.searchQuery = "   "
+
+        XCTAssertTrue(sut.searchSuggestions.isEmpty)
+    }
+
+    func test_searchSuggestions_trimsWhitespaceAroundQuery() async {
+        repository.stubbedResponse = [makeCountry(code: "EG", name: "Egypt")]
+        await sut.loadCountries()
+
+        sut.searchQuery = "  egypt  "
+
+        XCTAssertEqual(sut.searchSuggestions.count, 1)
+        XCTAssertEqual(sut.searchSuggestions.first?.code, "EG")
+    }
+
     func test_searchSuggestions_filtersAvailableCountries() async {
         repository.stubbedResponse = [
             makeCountry(code: "EG", name: "Egypt"),
