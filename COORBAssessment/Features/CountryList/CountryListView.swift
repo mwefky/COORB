@@ -71,14 +71,19 @@ struct CountryListView: View {
     private var countryList: some View {
         List {
             ForEach(viewModel.addedCountries) { country in
-                CountryRow(country: country)
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                    .padding(.vertical, 4)
+                NavigationLink(value: country) {
+                    CountryRow(country: country)
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .padding(.vertical, 4)
             }
             .onDelete(perform: viewModel.removeCountry(at:))
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+        .navigationDestination(for: Country.self) { country in
+            CountryDetailView(viewModel: CountryDetailViewModel(country: country))
+        }
     }
 }
