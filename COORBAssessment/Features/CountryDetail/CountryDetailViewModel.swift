@@ -19,7 +19,8 @@ class CountryDetailViewModel: ObservableObject {
     var capital: String { country.capital }
     var currency: String { country.currency }
 
-    var flagURL: URL {
-        URL(string: country.flagURL)!
+    var flagURL: URL? {
+        guard !country.flagURL.isEmpty else { return nil }
+        return URL(string: country.flagURL)
     }
 }

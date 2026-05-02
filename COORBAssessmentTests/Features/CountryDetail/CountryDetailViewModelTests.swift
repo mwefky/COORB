@@ -22,12 +22,20 @@ final class CountryDetailViewModelTests: XCTestCase {
         XCTAssertEqual(sut.currency, "Egyptian pound")
     }
 
-    func test_flagURL_returnsParsedURL() {
+    func test_flagURL_returnsParsedURL_whenAvailable() {
         let country = Country(code: "EG", name: "Egypt", capital: "Cairo",
                               currency: "Egyptian pound",
                               flagURL: "https://flagcdn.com/w320/eg.png")
         let sut = CountryDetailViewModel(country: country)
 
-        XCTAssertEqual(sut.flagURL.absoluteString, "https://flagcdn.com/w320/eg.png")
+        XCTAssertEqual(sut.flagURL?.absoluteString, "https://flagcdn.com/w320/eg.png")
+    }
+
+    func test_flagURL_returnsNil_whenCountryHasNoFlag() {
+        let country = Country(code: "XX", name: "Nowhere", capital: "Capital",
+                              currency: "Currency", flagURL: "")
+        let sut = CountryDetailViewModel(country: country)
+
+        XCTAssertNil(sut.flagURL)
     }
 }

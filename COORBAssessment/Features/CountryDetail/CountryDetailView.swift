@@ -20,16 +20,10 @@ struct CountryDetailView: View {
             .ignoresSafeArea()
 
             VStack(spacing: 24) {
-                AsyncImage(url: viewModel.flagURL) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 200, height: 130)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 4)
+                flagImage
+                    .frame(width: 200, height: 130)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 4)
 
                 VStack(spacing: 14) {
                     DetailRow(label: "Capital", value: viewModel.capital)
@@ -48,6 +42,26 @@ struct CountryDetailView: View {
         }
         .navigationTitle(viewModel.name)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private var flagImage: some View {
+        if let url = viewModel.flagURL {
+            AsyncImage(url: url) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+            } placeholder: {
+                ProgressView()
+            }
+        } else {
+            ZStack {
+                Color.gray.opacity(0.15)
+                Image(systemName: "flag")
+                    .font(.system(size: 40))
+                    .foregroundColor(.secondary)
+            }
+        }
     }
 }
 
