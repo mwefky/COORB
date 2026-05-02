@@ -3,16 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		07BF8FA5C23B28C5BC152837 /* CountryMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03334C36AF633A0776389E3 /* CountryMapper.swift */; };
+		16B846797884B610AB154B33 /* CountriesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD37B4105D26A7FDFB5A527 /* CountriesCache.swift */; };
 		1C53A53D4938AE5E02337FEF /* CountryDTODecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0AE9F8411FA06F008ADE272 /* CountryDTODecodingTests.swift */; };
 		22163BC79AA96E1A61F37EAC /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17FBD371A2B3D8BE5AEC33F /* APIError.swift */; };
 		3B9727895454F8154ADF8434 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F03CE62B22B3F5B07815C8 /* Country.swift */; };
 		857F9074B2C4B087CB6F2726 /* URLProtocolStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741453F1B9F823B1F4ECFF07 /* URLProtocolStub.swift */; };
 		8D89AA4C4478B28BF046E35D /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E829EE617AC53275A0CF00AE /* AppConfig.swift */; };
+		91DFFC41B932D3D0692DAAF9 /* FileCountriesCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D729802D500218DD4369B9D2 /* FileCountriesCacheTests.swift */; };
 		9B9E2D3F0E6A1EA9CC7E0AAA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9544934E9C59EEE0A0A3116A /* Assets.xcassets */; };
 		AF75D433AB5801B1D565688D /* CountryMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D022A0FD73CDFEC8531EAD /* CountryMapperTests.swift */; };
 		BF0E2C688E46B6C19B572B23 /* CountryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E722B0A8C28ED8018E3EF2 /* CountryDTO.swift */; };
@@ -37,10 +39,12 @@
 		19E722B0A8C28ED8018E3EF2 /* CountryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDTO.swift; sourceTree = "<group>"; };
 		2029EE2FDE881F521F7201B1 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		283972D0A76025453D694F4D /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
+		3DD37B4105D26A7FDFB5A527 /* CountriesCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCache.swift; sourceTree = "<group>"; };
 		741453F1B9F823B1F4ECFF07 /* URLProtocolStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolStub.swift; sourceTree = "<group>"; };
 		86F03CE62B22B3F5B07815C8 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		9544934E9C59EEE0A0A3116A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC4C952E0671EF3C17A75586 /* COORBAssessmentTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = COORBAssessmentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D729802D500218DD4369B9D2 /* FileCountriesCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCountriesCacheTests.swift; sourceTree = "<group>"; };
 		E03334C36AF633A0776389E3 /* CountryMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMapper.swift; sourceTree = "<group>"; };
 		E7D022A0FD73CDFEC8531EAD /* CountryMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMapperTests.swift; sourceTree = "<group>"; };
 		E829EE617AC53275A0CF00AE /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
@@ -69,6 +73,22 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		470112DA41BC746D8895D578 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				D729802D500218DD4369B9D2 /* FileCountriesCacheTests.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		6D3238E17FB2ABF013876E57 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				3DD37B4105D26A7FDFB5A527 /* CountriesCache.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		743BC03CD98ECE0C9E2FBE53 = {
 			isa = PBXGroup;
 			children = (
@@ -86,6 +106,7 @@
 				1889EEEABEA5080D2A7C75EF /* Models */,
 				AD6F3F2340025324A6030E22 /* Network */,
 				D9DE3D2E7F08181B1389E797 /* Resources */,
+				6D3238E17FB2ABF013876E57 /* Storage */,
 			);
 			path = COORBAssessment;
 			sourceTree = "<group>";
@@ -115,6 +136,7 @@
 				071DFD14A446965CDD0BFC8B /* Helpers */,
 				9F4BC73455D888C159D29E65 /* Models */,
 				EF948E6629D2335C1F77B4CE /* Network */,
+				470112DA41BC746D8895D578 /* Storage */,
 			);
 			path = COORBAssessmentTests;
 			sourceTree = "<group>";
@@ -159,6 +181,8 @@
 				F92B4E642BAB6089896ACCCB /* PBXTargetDependency */,
 			);
 			name = COORBAssessmentTests;
+			packageProductDependencies = (
+			);
 			productName = COORBAssessmentTests;
 			productReference = CC4C952E0671EF3C17A75586 /* COORBAssessmentTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -175,6 +199,8 @@
 			dependencies = (
 			);
 			name = COORBAssessment;
+			packageProductDependencies = (
+			);
 			productName = COORBAssessment;
 			productReference = EC2A060556230A0AFE8D2FCB /* COORBAssessment.app */;
 			productType = "com.apple.product-type.application";
@@ -185,12 +211,12 @@
 		0B90D3E89098171143259C54 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1200;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 				};
 			};
 			buildConfigurationList = EACF5B118C609758F6B8FC8B /* Build configuration list for PBXProject "COORBAssessment" */;
-			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -198,6 +224,9 @@
 				en,
 			);
 			mainGroup = 743BC03CD98ECE0C9E2FBE53;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CA7502270A9A8FBD6D650CC4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -226,6 +255,7 @@
 				C600F66515FDE89640929F24 /* APIClientTests.swift in Sources */,
 				1C53A53D4938AE5E02337FEF /* CountryDTODecodingTests.swift in Sources */,
 				AF75D433AB5801B1D565688D /* CountryMapperTests.swift in Sources */,
+				91DFFC41B932D3D0692DAAF9 /* FileCountriesCacheTests.swift in Sources */,
 				857F9074B2C4B087CB6F2726 /* URLProtocolStub.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,6 +269,7 @@
 				22163BC79AA96E1A61F37EAC /* APIError.swift in Sources */,
 				8D89AA4C4478B28BF046E35D /* AppConfig.swift in Sources */,
 				DEC335C43EA553E4D12FE984 /* COORBAssessmentApp.swift in Sources */,
+				16B846797884B610AB154B33 /* CountriesCache.swift in Sources */,
 				3B9727895454F8154ADF8434 /* Country.swift in Sources */,
 				BF0E2C688E46B6C19B572B23 /* CountryDTO.swift in Sources */,
 				07BF8FA5C23B28C5BC152837 /* CountryMapper.swift in Sources */,
