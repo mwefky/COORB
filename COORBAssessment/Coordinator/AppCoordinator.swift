@@ -30,11 +30,17 @@ class AppCoordinator: Coordinator {
     }
 
     func start() -> some View {
-        // The country list view will be wired in once that feature lands.
         NavigationStack {
-            ProgressView()
-                .progressViewStyle(.circular)
-                .navigationTitle("Countries")
+            CountryListView(viewModel: self.makeListViewModel())
         }
+    }
+
+    private func makeListViewModel() -> CountryListViewModel {
+        CountryListViewModel(
+            repository: repository,
+            store: store,
+            locationProvider: locationProvider,
+            resolver: resolver
+        )
     }
 }
