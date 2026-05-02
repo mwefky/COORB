@@ -39,7 +39,7 @@ struct CountryListView: View {
         .alert("You've reached the limit",
                isPresented: $viewModel.limitReachedAlert,
                actions: { Button("OK", role: .cancel) {} },
-               message: { Text("You can save up to \(LocalStore.maxCountries) countries. Remove one before adding another.") })
+               message: { Text("You can save up to \(viewModel.maxCountries) countries. Remove one before adding another.") })
         .onChange(of: viewModel.permissionDenied) { denied in
             if denied { showPermissionAlert = true }
         }

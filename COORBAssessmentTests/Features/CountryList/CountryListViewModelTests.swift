@@ -54,7 +54,7 @@ final class CountryListViewModelTests: XCTestCase {
     }
 
     func test_initial_loadsAddedCountriesFromStore() {
-        store.add(makeCountry(code: "EG"))
+        store.save(makeCountry(code: "EG"))
 
         let fresh = CountryListViewModel(
             repository: repository, store: store,
@@ -193,7 +193,7 @@ final class CountryListViewModelTests: XCTestCase {
     }
 
     func test_resolvesDefault_skipsWhenUserAlreadyHasCountries() async {
-        store.add(makeCountry(code: "JP", name: "Japan"))
+        store.save(makeCountry(code: "JP", name: "Japan"))
         let viewModel = CountryListViewModel(
             repository: repository, store: store,
             locationProvider: locationProvider, resolver: resolver
