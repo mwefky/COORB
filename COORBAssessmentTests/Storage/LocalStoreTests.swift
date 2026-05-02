@@ -32,37 +32,24 @@ final class LocalStoreTests: XCTestCase {
         XCTAssertTrue(sut.addedCountries.isEmpty)
     }
 
-    func test_add_appendsCountry() {
-        sut.add(makeCountry(code: "EG"))
+    func test_save_appendsCountry() {
+        sut.save(makeCountry(code: "EG"))
 
         XCTAssertEqual(sut.addedCountries.count, 1)
         XCTAssertEqual(sut.addedCountries.first?.code, "EG")
     }
 
-    func test_add_doesNotAddDuplicates_andReturnsDuplicate() {
-        XCTAssertEqual(sut.add(makeCountry(code: "EG")), .added)
-        XCTAssertEqual(sut.add(makeCountry(code: "EG")), .duplicate)
-
-        XCTAssertEqual(sut.addedCountries.count, 1)
-    }
-
-    func test_add_returnsLimitReached_andDoesNotEvict_whenAtLimit() {
-        for code in ["EG", "FR", "DE", "ES", "IT"] {
-            sut.add(makeCountry(code: code))
+    func test_save_doesNotEnforceLimitOrDeduplication() {
+        for code in ["EG", "FR", "DE", "ES", "IT", "JP", "EG"] {
+            sut.save(makeCountry(code: code))
         }
 
-        let result = sut.add(makeCountry(code: "JP"))
-
-        XCTAssertEqual(result, .limitReached)
-        XCTAssertEqual(sut.addedCountries.count, 5)
-        XCTAssertEqual(sut.addedCountries.first?.code, "EG")
-        XCTAssertEqual(sut.addedCountries.last?.code, "IT")
-        XCTAssertFalse(sut.addedCountries.contains(where: { $0.code == "JP" }))
+        XCTAssertEqual(sut.addedCountries.count, 7)
     }
 
     func test_remove_removesByCode() {
-        sut.add(makeCountry(code: "EG"))
-        sut.add(makeCountry(code: "FR"))
+        sut.save(makeCountry(code: "EG"))
+        sut.save(makeCountry(code: "FR"))
 
         sut.remove(makeCountry(code: "EG"))
 
@@ -71,15 +58,15 @@ final class LocalStoreTests: XCTestCase {
     }
 
     func test_remove_isNoOp_whenCountryNotPresent() {
-        sut.add(makeCountry(code: "EG"))
+        sut.save(makeCountry(code: "EG"))
         sut.remove(makeCountry(code: "FR"))
 
         XCTAssertEqual(sut.addedCountries.count, 1)
     }
 
     func test_persistsAcrossInstances() {
-        sut.add(makeCountry(code: "EG"))
-        sut.add(makeCountry(code: "FR"))
+        sut.save(makeCountry(code: "EG"))
+        sut.save(makeCountry(code: "FR"))
 
         let fresh = LocalStore(userDefaults: userDefaults, storageKey: "addedCountries")
 

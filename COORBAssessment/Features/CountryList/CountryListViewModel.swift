@@ -22,6 +22,7 @@ class CountryListViewModel: ObservableObject {
     private let store: LocalStore
     private let locationProvider: LocationProviding
     private let resolver: DefaultCountryResolving
+    private let policy: CountryListPolicy
     private var cancellables = Set<AnyCancellable>()
 
     private var locationCountry: String?
@@ -30,14 +31,18 @@ class CountryListViewModel: ObservableObject {
     init(repository: CountriesRepository,
          store: LocalStore,
          locationProvider: LocationProviding,
-         resolver: DefaultCountryResolving) {
+         resolver: DefaultCountryResolving,
+         policy: CountryListPolicy = DefaultCountryListPolicy()) {
         self.repository = repository
         self.store = store
         self.locationProvider = locationProvider
         self.resolver = resolver
+        self.policy = policy
         self.addedCountries = store.addedCountries
         bindLocation()
     }
+
+    var maxCountries: Int { policy.maxCountries }
 
     var searchSuggestions: [Country] {
         let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -77,10 +82,14 @@ class CountryListViewModel: ObservableObject {
     }
 
     func addCountry(_ country: Country) {
-        let result = store.add(country)
-        addedCountries = store.addedCountries
-        if result == .limitReached {
+        switch policy.evaluate(country, against: store.addedCountries) {
+        case .allowed:
+            store.save(country)
+            addedCountries = store.addedCountries
+        case .limitReached:
             limitReachedAlert = true
+        case .duplicate:
+            break
         }
     }
 
@@ -127,7 +136,7 @@ class CountryListViewModel: ObservableObject {
 
         if let country = resolver.resolveDefault(among: availableCountries,
                                                  locationCountry: locationCountry) {
-            store.add(country)
+            store.save(country)
             addedCountries = store.addedCountries
         }
         didResolveDefault = true
