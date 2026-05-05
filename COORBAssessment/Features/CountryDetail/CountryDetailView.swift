@@ -12,34 +12,27 @@ struct CountryDetailView: View {
     @StateObject var viewModel: CountryDetailViewModel
 
     var body: some View {
-        ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [.blue.opacity(0.2), .white]),
-                startPoint: .top, endPoint: .bottom
-            )
-            .ignoresSafeArea()
+        VStack(spacing: Theme.Spacing.xl) {
+            flagImage
+                .frame(width: Theme.FlagSize.width, height: Theme.FlagSize.height)
+                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.md))
+                .shadow(color: Theme.Colors.shadowStrong,
+                        radius: Theme.Shadow.strong.radius,
+                        x: Theme.Shadow.strong.x,
+                        y: Theme.Shadow.strong.y)
 
-            VStack(spacing: 24) {
-                flagImage
-                    .frame(width: 200, height: 130)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 4)
-
-                VStack(spacing: 14) {
-                    DetailRow(label: "Capital", value: viewModel.capital)
-                    Divider()
-                    DetailRow(label: "Currency", value: viewModel.currency)
-                }
-                .padding()
-                .background(Color.white.opacity(0.8))
-                .cornerRadius(16)
-                .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
-
-                Spacer()
+            VStack(spacing: Theme.Spacing.md + 2) {
+                DetailRow(label: "Capital", value: viewModel.capital)
+                Divider()
+                DetailRow(label: "Currency", value: viewModel.currency)
             }
-            .padding()
-            .padding(.top, 16)
+            .infoCardStyle()
+
+            Spacer()
         }
+        .padding()
+        .padding(.top, Theme.Spacing.lg)
+        .screenBackground()
         .navigationTitle(viewModel.name)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -56,7 +49,7 @@ struct CountryDetailView: View {
             }
         } else {
             ZStack {
-                Color.gray.opacity(0.15)
+                Theme.Colors.placeholderBackground
                 Image(systemName: "flag")
                     .font(.system(size: 40))
                     .foregroundColor(.secondary)

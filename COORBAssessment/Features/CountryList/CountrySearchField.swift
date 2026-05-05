@@ -14,8 +14,8 @@ struct CountrySearchField: View {
     let onSelection: (Country) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
+            HStack(spacing: Theme.Spacing.sm) {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.secondary)
                 TextField("Search for a country", text: $text)
@@ -30,9 +30,9 @@ struct CountrySearchField: View {
                     }
                 }
             }
-            .padding(12)
+            .padding(Theme.Spacing.md)
             .background(.thinMaterial)
-            .cornerRadius(12)
+            .cornerRadius(Theme.Radius.md)
 
             if !text.isEmpty && !suggestions.isEmpty {
                 ScrollView {
@@ -45,8 +45,8 @@ struct CountrySearchField: View {
                             } label: {
                                 Text(country.name)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.vertical, 10)
-                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, Theme.Spacing.sm + 2)
+                                    .padding(.horizontal, Theme.Spacing.md)
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
@@ -57,11 +57,14 @@ struct CountrySearchField: View {
                 }
                 .frame(maxHeight: 220)
                 .background(Color(.systemBackground))
-                .cornerRadius(12)
-                .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
+                .cornerRadius(Theme.Radius.md)
+                .shadow(color: Theme.Colors.shadow,
+                        radius: Theme.Shadow.card.radius,
+                        x: Theme.Shadow.card.x,
+                        y: Theme.Shadow.card.y)
             }
         }
         .padding(.horizontal)
-        .padding(.top, 8)
+        .padding(.top, Theme.Spacing.sm)
     }
 }
