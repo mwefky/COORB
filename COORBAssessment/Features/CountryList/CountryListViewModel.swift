@@ -18,31 +18,36 @@ class CountryListViewModel: ObservableObject {
     @Published private(set) var permissionDenied: Bool = false
     @Published var limitReachedAlert: Bool = false
 
-    private let repository: CountriesRepository
-    private let store: LocalStore
+    let maxCountries: Int
+
+    private let loadCountriesUseCase: LoadCountriesUseCase
+    private let addCountryUseCase: AddCountryUseCase
+    private let removeCountryUseCase: RemoveCountryUseCase
+    private let getSavedCountriesUseCase: GetSavedCountriesUseCase
+    private let resolveDefaultUseCase: ResolveDefaultCountryUseCase
     private let locationProvider: LocationProviding
-    private let resolver: DefaultCountryResolving
-    private let policy: CountryListPolicy
     private var cancellables = Set<AnyCancellable>()
 
     private var locationCountry: String?
     private var didResolveDefault = false
 
-    init(repository: CountriesRepository,
-         store: LocalStore,
+    init(loadCountries: LoadCountriesUseCase,
+         addCountry: AddCountryUseCase,
+         removeCountry: RemoveCountryUseCase,
+         getSavedCountries: GetSavedCountriesUseCase,
+         resolveDefault: ResolveDefaultCountryUseCase,
          locationProvider: LocationProviding,
-         resolver: DefaultCountryResolving,
-         policy: CountryListPolicy = DefaultCountryListPolicy()) {
-        self.repository = repository
-        self.store = store
+         maxCountries: Int = 5) {
+        self.loadCountriesUseCase = loadCountries
+        self.addCountryUseCase = addCountry
+        self.removeCountryUseCase = removeCountry
+        self.getSavedCountriesUseCase = getSavedCountries
+        self.resolveDefaultUseCase = resolveDefault
         self.locationProvider = locationProvider
-        self.resolver = resolver
-        self.policy = policy
-        self.addedCountries = store.addedCountries
+        self.maxCountries = maxCountries
+        self.addedCountries = getSavedCountries.execute()
         bindLocation()
     }
-
-    var maxCountries: Int { policy.maxCountries }
 
     var searchSuggestions: [Country] {
         let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -66,7 +71,7 @@ class CountryListViewModel: ObservableObject {
         }
 
         do {
-            let countries = try await repository.fetchCountries()
+            let countries = try await loadCountriesUseCase.execute()
             await MainActor.run { [weak self] in
                 guard let self else { return }
                 self.availableCountries = countries
@@ -82,10 +87,9 @@ class CountryListViewModel: ObservableObject {
     }
 
     func addCountry(_ country: Country) {
-        switch policy.evaluate(country, against: store.addedCountries) {
+        switch addCountryUseCase.execute(country) {
         case .allowed:
-            store.save(country)
-            addedCountries = store.addedCountries
+            addedCountries = getSavedCountriesUseCase.execute()
         case .limitReached:
             limitReachedAlert = true
         case .duplicate:
@@ -94,14 +98,15 @@ class CountryListViewModel: ObservableObject {
     }
 
     func removeCountry(_ country: Country) {
-        store.remove(country)
-        addedCountries = store.addedCountries
+        removeCountryUseCase.execute(country)
+        addedCountries = getSavedCountriesUseCase.execute()
     }
 
     func removeCountry(at offsets: IndexSet) {
-        let toRemove = offsets.map { addedCountries[$0] }
-        toRemove.forEach { store.remove($0) }
-        addedCountries = store.addedCountries
+        for index in offsets {
+            removeCountryUseCase.execute(addedCountries[index])
+        }
+        addedCountries = getSavedCountriesUseCase.execute()
     }
 
     private func bindLocation() {
@@ -134,10 +139,10 @@ class CountryListViewModel: ObservableObject {
         guard !availableCountries.isEmpty else { return }
         guard locationCountry != nil || permissionDenied else { return }
 
-        if let country = resolver.resolveDefault(among: availableCountries,
-                                                 locationCountry: locationCountry) {
-            store.save(country)
-            addedCountries = store.addedCountries
+        if let country = resolveDefaultUseCase.execute(among: availableCountries,
+                                                       locationCountry: locationCountry) {
+            _ = addCountryUseCase.execute(country)
+            addedCountries = getSavedCountriesUseCase.execute()
         }
         didResolveDefault = true
     }
