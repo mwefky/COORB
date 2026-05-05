@@ -11,41 +11,36 @@ import Combine
 
 final class CountryListViewModelTests: XCTestCase {
 
-    private let suiteName = "CountryListViewModelTests"
-    private var userDefaults: UserDefaults!
-    private var repository: MockCountriesRepository!
-    private var store: LocalStore!
+    private var loadCountries: MockLoadCountriesUseCase!
+    private var addCountry: MockAddCountryUseCase!
+    private var removeCountry: MockRemoveCountryUseCase!
+    private var getSavedCountries: MockGetSavedCountriesUseCase!
+    private var resolveDefault: MockResolveDefaultCountryUseCase!
     private var locationProvider: MockLocationProvider!
-    private var resolver: DefaultCountryResolver!
     private var sut: CountryListViewModel!
     private var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
-        userDefaults = UserDefaults(suiteName: suiteName)
-        userDefaults.removePersistentDomain(forName: suiteName)
-        repository = MockCountriesRepository()
-        store = LocalStore(userDefaults: userDefaults, storageKey: "addedCountries")
+        loadCountries = MockLoadCountriesUseCase()
+        addCountry = MockAddCountryUseCase()
+        removeCountry = MockRemoveCountryUseCase()
+        getSavedCountries = MockGetSavedCountriesUseCase()
+        resolveDefault = MockResolveDefaultCountryUseCase()
         locationProvider = MockLocationProvider()
-        resolver = DefaultCountryResolver()
-        sut = CountryListViewModel(
-            repository: repository,
-            store: store,
-            locationProvider: locationProvider,
-            resolver: resolver
-        )
+        sut = makeViewModel()
         cancellables = []
     }
 
     override func tearDown() {
-        userDefaults.removePersistentDomain(forName: suiteName)
         cancellables = nil
         sut = nil
-        resolver = nil
         locationProvider = nil
-        store = nil
-        repository = nil
-        userDefaults = nil
+        resolveDefault = nil
+        getSavedCountries = nil
+        removeCountry = nil
+        addCountry = nil
+        loadCountries = nil
         super.tearDown()
     }
 
@@ -53,19 +48,15 @@ final class CountryListViewModelTests: XCTestCase {
         XCTAssertTrue(sut.addedCountries.isEmpty)
     }
 
-    func test_initial_loadsAddedCountriesFromStore() {
-        store.save(makeCountry(code: "EG"))
-
-        let fresh = CountryListViewModel(
-            repository: repository, store: store,
-            locationProvider: locationProvider, resolver: resolver
-        )
+    func test_initial_loadsAddedCountriesFromGetSavedUseCase() {
+        getSavedCountries.stubbedCountries = [makeCountry(code: "EG")]
+        let fresh = makeViewModel()
 
         XCTAssertEqual(fresh.addedCountries.count, 1)
     }
 
     func test_loadCountries_populatesAvailableCountries() async {
-        repository.stubbedResponse = [makeCountry(code: "EG"), makeCountry(code: "FR", name: "France")]
+        loadCountries.stubbedResponse = [makeCountry(code: "EG"), makeCountry(code: "FR", name: "France")]
 
         await sut.loadCountries()
 
@@ -75,7 +66,7 @@ final class CountryListViewModelTests: XCTestCase {
     }
 
     func test_loadCountries_setsErrorMessage_onFailure() async {
-        repository.stubbedError = APIError.server(statusCode: 500)
+        loadCountries.stubbedError = APIError.server(statusCode: 500)
 
         await sut.loadCountries()
 
@@ -83,48 +74,56 @@ final class CountryListViewModelTests: XCTestCase {
         XCTAssertFalse(sut.isLoading)
     }
 
-    func test_addCountry_appendsToAddedCountries() {
+    func test_addCountry_appendsToAddedCountries_whenAllowed() {
+        addCountry.stubbedAdmission = .allowed
+        getSavedCountries.stubbedCountries = [makeCountry(code: "EG")]
+
         sut.addCountry(makeCountry(code: "EG"))
 
-        XCTAssertEqual(sut.addedCountries.count, 1)
+        XCTAssertEqual(addCountry.executedCountries.count, 1)
         XCTAssertEqual(sut.addedCountries.first?.code, "EG")
     }
 
-    func test_addCountry_setsLimitAlert_andDoesNotEvict_whenAtLimit() {
-        for code in ["EG", "FR", "DE", "ES", "IT"] {
-            sut.addCountry(makeCountry(code: code))
-        }
+    func test_addCountry_setsLimitAlert_whenLimitReached() {
+        addCountry.stubbedAdmission = .limitReached
 
         sut.addCountry(makeCountry(code: "JP"))
 
         XCTAssertTrue(sut.limitReachedAlert)
-        XCTAssertEqual(sut.addedCountries.count, 5)
-        XCTAssertEqual(sut.addedCountries.first?.code, "EG")
-        XCTAssertFalse(sut.addedCountries.contains(where: { $0.code == "JP" }))
     }
 
-    func test_removeCountry_removesFromAddedCountries() {
+    func test_addCountry_isNoOp_whenDuplicate() {
+        addCountry.stubbedAdmission = .duplicate
+
         sut.addCountry(makeCountry(code: "EG"))
-        sut.addCountry(makeCountry(code: "FR", name: "France"))
+
+        XCTAssertFalse(sut.limitReachedAlert)
+    }
+
+    func test_removeCountry_callsUseCase_andRefreshesList() {
+        getSavedCountries.stubbedCountries = [makeCountry(code: "FR")]
 
         sut.removeCountry(makeCountry(code: "EG"))
 
-        XCTAssertEqual(sut.addedCountries.count, 1)
+        XCTAssertEqual(removeCountry.removedCountries.first?.code, "EG")
         XCTAssertEqual(sut.addedCountries.first?.code, "FR")
     }
 
     func test_removeCountryAtOffsets_removesByIndex() {
-        sut.addCountry(makeCountry(code: "EG"))
-        sut.addCountry(makeCountry(code: "FR", name: "France"))
+        getSavedCountries.stubbedCountries = [
+            makeCountry(code: "EG"),
+            makeCountry(code: "FR", name: "France")
+        ]
+        let viewModel = makeViewModel()
+        getSavedCountries.stubbedCountries = [makeCountry(code: "FR", name: "France")]
 
-        sut.removeCountry(at: IndexSet(integer: 0))
+        viewModel.removeCountry(at: IndexSet(integer: 0))
 
-        XCTAssertEqual(sut.addedCountries.count, 1)
-        XCTAssertEqual(sut.addedCountries.first?.code, "FR")
+        XCTAssertEqual(removeCountry.removedCountries.first?.code, "EG")
     }
 
     func test_searchSuggestions_emptyForEmptyQuery() async {
-        repository.stubbedResponse = [makeCountry(code: "EG")]
+        loadCountries.stubbedResponse = [makeCountry(code: "EG")]
         await sut.loadCountries()
 
         sut.searchQuery = ""
@@ -133,7 +132,7 @@ final class CountryListViewModelTests: XCTestCase {
     }
 
     func test_searchSuggestions_emptyForWhitespaceOnlyQuery() async {
-        repository.stubbedResponse = [makeCountry(code: "EG", name: "Egypt")]
+        loadCountries.stubbedResponse = [makeCountry(code: "EG", name: "Egypt")]
         await sut.loadCountries()
 
         sut.searchQuery = "   "
@@ -142,7 +141,7 @@ final class CountryListViewModelTests: XCTestCase {
     }
 
     func test_searchSuggestions_trimsWhitespaceAroundQuery() async {
-        repository.stubbedResponse = [makeCountry(code: "EG", name: "Egypt")]
+        loadCountries.stubbedResponse = [makeCountry(code: "EG", name: "Egypt")]
         await sut.loadCountries()
 
         sut.searchQuery = "  egypt  "
@@ -152,7 +151,7 @@ final class CountryListViewModelTests: XCTestCase {
     }
 
     func test_searchSuggestions_filtersAvailableCountries() async {
-        repository.stubbedResponse = [
+        loadCountries.stubbedResponse = [
             makeCountry(code: "EG", name: "Egypt"),
             makeCountry(code: "FR", name: "France"),
             makeCountry(code: "DE", name: "Germany")
@@ -166,39 +165,41 @@ final class CountryListViewModelTests: XCTestCase {
     }
 
     func test_resolvesDefault_addsLocationMatch_whenLocationKnown() async {
-        repository.stubbedResponse = [
+        loadCountries.stubbedResponse = [
             makeCountry(code: "EG", name: "Egypt"),
             makeCountry(code: "FR", name: "France")
         ]
+        resolveDefault.stubbedResult = makeCountry(code: "FR", name: "France")
+        getSavedCountries.stubbedCountries = [makeCountry(code: "FR", name: "France")]
         locationProvider.currentCountrySubject.send("France")
 
         await waitForSinks()
         await sut.loadCountries()
 
+        XCTAssertEqual(addCountry.executedCountries.first?.code, "FR")
         XCTAssertEqual(sut.addedCountries.first?.code, "FR")
     }
 
     func test_resolvesDefault_fallsBackToEgypt_whenPermissionDenied() async {
-        repository.stubbedResponse = [
+        loadCountries.stubbedResponse = [
             makeCountry(code: "EG", name: "Egypt"),
             makeCountry(code: "FR", name: "France")
         ]
+        resolveDefault.stubbedResult = makeCountry(code: "EG", name: "Egypt")
+        getSavedCountries.stubbedCountries = [makeCountry(code: "EG", name: "Egypt")]
         locationProvider.permissionDeniedSubject.send(true)
 
         await waitForSinks()
         await sut.loadCountries()
 
-        XCTAssertEqual(sut.addedCountries.first?.code, "EG")
+        XCTAssertEqual(addCountry.executedCountries.first?.code, "EG")
         XCTAssertTrue(sut.permissionDenied)
     }
 
     func test_resolvesDefault_skipsWhenUserAlreadyHasCountries() async {
-        store.save(makeCountry(code: "JP", name: "Japan"))
-        let viewModel = CountryListViewModel(
-            repository: repository, store: store,
-            locationProvider: locationProvider, resolver: resolver
-        )
-        repository.stubbedResponse = [
+        getSavedCountries.stubbedCountries = [makeCountry(code: "JP", name: "Japan")]
+        let viewModel = makeViewModel()
+        loadCountries.stubbedResponse = [
             makeCountry(code: "EG", name: "Egypt"),
             makeCountry(code: "FR", name: "France")
         ]
@@ -207,11 +208,21 @@ final class CountryListViewModelTests: XCTestCase {
         await waitForSinks()
         await viewModel.loadCountries()
 
-        XCTAssertEqual(viewModel.addedCountries.count, 1)
-        XCTAssertEqual(viewModel.addedCountries.first?.code, "JP")
+        XCTAssertEqual(addCountry.executedCountries.count, 0)
     }
 
     // MARK: - Helpers
+
+    private func makeViewModel() -> CountryListViewModel {
+        CountryListViewModel(
+            loadCountries: loadCountries,
+            addCountry: addCountry,
+            removeCountry: removeCountry,
+            getSavedCountries: getSavedCountries,
+            resolveDefault: resolveDefault,
+            locationProvider: locationProvider
+        )
+    }
 
     private func makeCountry(
         code: String,
