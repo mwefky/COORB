@@ -13,24 +13,17 @@ struct CountryListView: View {
     @State private var showPermissionAlert = false
 
     var body: some View {
-        ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [.blue.opacity(0.2), .white]),
-                startPoint: .top, endPoint: .bottom
+        VStack(spacing: 0) {
+            CountrySearchField(
+                text: $viewModel.searchQuery,
+                suggestions: viewModel.searchSuggestions,
+                onSelection: { country in
+                    viewModel.addCountry(country)
+                }
             )
-            .ignoresSafeArea()
-
-            VStack(spacing: 0) {
-                CountrySearchField(
-                    text: $viewModel.searchQuery,
-                    suggestions: viewModel.searchSuggestions,
-                    onSelection: { country in
-                        viewModel.addCountry(country)
-                    }
-                )
-                content
-            }
+            content
         }
+        .screenBackground()
         .navigationTitle("Countries")
         .alert("Location permission denied",
                isPresented: $showPermissionAlert,
@@ -80,7 +73,7 @@ struct CountryListView: View {
                 }
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
-                .padding(.vertical, 4)
+                .padding(.vertical, Theme.Spacing.xs)
             }
             .onDelete(perform: viewModel.removeCountry(at:))
         }
